@@ -1,0 +1,84 @@
+{% extends "base_web.html" %}
+
+{% block title %}
+    Model Trainer
+{% endblock %}
+
+{% block customcss %}
+{% load staticfiles %}
+<style>
+    .body {
+    padding-top: 0px;
+    }
+
+    #content-main {
+        max-width: 400px;
+        text-align: center;
+        padding: 39px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+
+    .form-row{
+      padding: 10px;
+    }
+
+    #login-form input[type="text"] {
+      margin-left: 5px;
+      width: 60%
+    }
+
+    #login-form input[type="radio"]{
+        margin: auto;
+    }
+
+    #login-form input[type="file"]{
+      padding: 10px;
+      margin-left: 105px;
+    }
+
+    #login-form input[type="submit"] {
+        color: black;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h2>Upload Dataset</h2>
+    <hr>
+
+    <form action="{% url 'upload_dataset_request' %}" method="post" id="login-form" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="form-row">
+          <label for="dataset_name">Dataset Name: </label>
+          <input id="dataset_name" type="text" name="dataset_name">
+        </div>
+        <div class="form-row">
+          <label for="dataset_name">Tag: </label>
+          <input class="tag" id="tag" type="text" name="tag">
+        </div>
+        <div class="form-row a">
+          <label for="dataset_name">Privacy: </label>
+          <input type="radio" name="privacy" value="Public"> Public
+          <input type="radio" name="privacy" value="Private"> Private
+        </div>
+        <div class="form-row">
+          <input type="file" name="data">
+        </div>
+        <div class="submit-row">
+          <input type="submit" value="Upload">
+        </div>
+      </form>
+</div>
+
+
+{% endblock %}

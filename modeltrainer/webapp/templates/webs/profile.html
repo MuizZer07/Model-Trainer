@@ -1,0 +1,27 @@
+{% extends "base_web.html" %}
+
+{% block title %}
+    Model Trainer |  {{user}}'s Profile
+{% endblock %}
+
+{% block customcss %}
+{% load staticfiles %}
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <section class="py-5">
+        <div class="container">
+            <a href="{% url 'upload_dataset' %}" type="btn"> Upload Dataset </a>
+            <a href="{% url 'train_model' %}" type="btn"> Train A Model </a>
+        </div>
+    </section>
+    <br><br><br><br>  <br><br><br><br>
+{% endblock %}

@@ -1,4 +1,4 @@
-### A Django Webapp to build image classifier deep learning models without coding
+### A Django Webapp to build AI Image Classifier Models without coding
 
 - Upload data
 - Data Loading and Preprocessing
