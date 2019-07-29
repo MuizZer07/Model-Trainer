@@ -53,26 +53,28 @@
 
 {% block content %}
 <div id="content-main">
-    <h2>Upload Dataset</h2>
+    <h2>Train Model</h2>
     <hr>
 
     <form action="{% url 'train_model_request' %}" method="post" id="login-form" enctype="multipart/form-data">
       {% csrf_token %}
         <div class="form-row">
           <label for="dataset_name">Dataset Name: </label>
-          <input id="dataset_name" type="text" name="dataset_name">
+          <select name="dataset_url">
+          {% for dataset in datasets %}
+            <option value="{{ dataset.file }}">{{ dataset.name }}</option>
+          {% endfor %}
+          </select>
         </div>
         <div class="form-row">
-          <label for="dataset_name">Tag: </label>
-          <input class="tag" id="tag" type="text" name="tag">
-        </div>
-        <div class="form-row a">
-          <label for="dataset_name">Privacy: </label>
-          <input type="radio" name="privacy" value="Public"> Public
-          <input type="radio" name="privacy" value="Private"> Private
-        </div>
-        <div class="form-row">
-          <input type="file" name="data">
+          <label for="training_model">Training Models: </label>
+          <select name="training_model">
+            {% for key, values in training_options.items %}
+              {% for value in values %}
+                <option value="{{ value }}">{{ value }}</option>
+              {% endfor %}
+            {% endfor %}
+          </select>
         </div>
         <div class="submit-row">
           <input type="submit" value="Upload">

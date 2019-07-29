@@ -4,6 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from .models import Dataset
 from modeltrainer import settings
 from django.contrib import messages
+from modelenv.model import Run_Model
 
 @login_required
 def upload_dataset(request):
@@ -33,11 +34,31 @@ def upload_dataset_request(request):
 @login_required
 def train_model(request):
     user = request.user
-    return render(request, 'train/train_model.html', {'user': user})
+    datasets = Dataset.objects.filter(owner=user)
+
+    training = ['Machine Learning', 'Convolutional Neural Networks', 'Transfer Learning' ]
+
+    training_options = {
+        'Transfer Learning': ['resnet', 'alexnet', 'vgg', 'squeezenet', 'densenet', 'inception'],
+        'Convolutional Neural Networks': [],
+        'Machine Learning': [],
+    }
+
+
+    return render(request, 'train/train_model.html', {
+                'user': user, 'datasets':datasets,
+                'training':training,
+                'training_options': training_options
+    })
 
 @login_required
 def train_model_request(request):
     if  request.method == 'POST':
-        pass
+        model_name = request.POST.get('training_model')
+        dataset_url = settings.MEDIA_ROOT + '/' + request.POST.get('dataset_url')
 
+        model_train = Run_Model(request.user, model_name, dataset_url)
+        val_acc = model_train.get_results()
+        
+        messages.add_message(request, messages.INFO, val_acc)
     return redirect('profile')

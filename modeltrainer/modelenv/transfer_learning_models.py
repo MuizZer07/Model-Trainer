@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-from preprocess import Preprocess
+from .preprocess import Preprocess
 
 class tf_Pretrained_Models:
 
@@ -31,9 +31,9 @@ class tf_Pretrained_Models:
     def run_transfer_learning(self):
         self.train(num_epochs=5, is_inception=(self.model_name=="inception"))
         self.set_parameter_requires_grad(True)
-        self.train(num_epochs=2, is_inception=(self.model_name=="inception"))
+        _, val_acc = self.train(num_epochs=2, is_inception=(self.model_name=="inception"))
 
-        return self.model, self.optimizer
+        return self.model, self.optimizer, val_acc
 
     def initialize_model(self):
 
@@ -51,7 +51,7 @@ class tf_Pretrained_Models:
             """
             self.model = models.alexnet(pretrained=self.use_pretrained)
             self.set_parameter_requires_grad(False)
-            num_ftrs = model_ft.classifier[6].in_features
+            num_ftrs = self.model.classifier[6].in_features
             self.model.classifier[6] = nn.Linear(num_ftrs, self.num_classes)
             self.input_size = 224
 
@@ -60,7 +60,7 @@ class tf_Pretrained_Models:
             """
             self.model = models.vgg11_bn(pretrained=self.use_pretrained)
             self.set_parameter_requires_grad(False)
-            num_ftrs = model_ft.classifier[6].in_features
+            num_ftrs = self.model.classifier[6].in_features
             self.model.classifier[6] = nn.Linear(num_ftrs, self.num_classes)
             self.input_size = 224
 
@@ -70,7 +70,7 @@ class tf_Pretrained_Models:
             self.model = models.squeezenet1_0(pretrained=self.use_pretrained)
             self.set_parameter_requires_grad(False)
             self.model.classifier[1] = nn.Conv2d(512, self.num_classes, kernel_size=(1,1), stride=(1,1))
-            self.model.num_classes = num_classes
+            self.model.num_classes = self.num_classes
             self.input_size = 224
 
         elif self.model_name == "densenet":

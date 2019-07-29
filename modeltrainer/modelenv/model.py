@@ -1,16 +1,25 @@
-from dataloader import Data_Loader
-from transfer_learning_models import tf_Pretrained_Models
+from .dataloader import Data_Loader
+from .transfer_learning_models import tf_Pretrained_Models
 import torch.optim as optim
 import torch.nn as nn
 
-dataloader = Data_Loader('/home/muiz/Downloads/idc_small.csv')
-df, num_of_classes = dataloader.get_data()
+class Run_Model:
 
-model_name = 'resnet'
-batch_size = 16
-criterion = nn.CrossEntropyLoss()
+    def __init__(self, user, model_name, data_path):
+        self.data_path = data_path
+        self.dataloader = Data_Loader(data_path)
+        self.df, self.num_of_classes = self.dataloader.get_data()
 
-model = tf_Pretrained_Models(model_name, num_of_classes, df, batch_size, criterion)
-trained_model, optimizer = model.run_transfer_learning()
+        self.model_name = model_name
+        self.batch_size = 16
+        self.criterion = nn.CrossEntropyLoss()
+        self.model_path = '/home/muiz/Downloads/'
+        self.trained_model_name = model_name + '_' + str(user)
 
-model.save_model(trained_model, optimizer, '/home/muiz/Downloads/', 'idc_resnet')
+        self.model = tf_Pretrained_Models(self.model_name, self.num_of_classes, self.df, self.batch_size, self.criterion)
+        self.trained_model, self.optimizer, self.val_acc = self.model.run_transfer_learning()
+
+        self.model.save_model(self.trained_model, self.optimizer, self.model_path, self.trained_model_name)
+
+    def get_results(self):
+        return self.val_acc
